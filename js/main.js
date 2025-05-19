@@ -1,11 +1,7 @@
 // Вспомогательные функции
-function getRandomInteger(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-function getRandomArrayElement(array) {
-  return array[getRandomInteger(0, array.length - 1)];
-}
+const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
 // Данные для генерации
 const DESCRIPTIONS = [
@@ -27,40 +23,49 @@ const NAMES = [
 
 let commentId = 1;
 
-function createComment() {
-  const message = getRandomArrayElement(MESSAGES);
-  const secondMessage = Math.random() < 0.5 ? '' : ` ${ getRandomArrayElement(MESSAGES)}`;
-  return {
-    id: commentId++,
-    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-    message: message + secondMessage,
-    name: getRandomArrayElement(NAMES)
-  };
-}
+const getRandomUniqueElements = (arr, count) => {
+  const copy = [...arr];
+  const result = [];
 
-function createPhoto(id) {
+  while (result.length < count && copy.length > 0) {
+    const index = getRandomInteger(0, copy.length - 1);
+    result.push(copy.splice(index, 1)[0]);
+  }
+
+  return result;
+};
+
+const generateMessage = () => {
+  const sentenceCount = getRandomInteger(1, 2);
+  const sentences = getRandomUniqueElements(MESSAGES, sentenceCount);
+  return sentences.join(' ');
+};
+
+const createComment = () => ({
+  id: commentId++,
+  avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
+  message: generateMessage(),
+  name: getRandomArrayElement(NAMES)
+});
+
+const generateComments = () => {
   const comments = [];
   const commentsCount = getRandomInteger(0, 30);
   for (let i = 0; i < commentsCount; i++) {
     comments.push(createComment());
   }
+  return comments;
+};
 
-  return {
-    id: id,
-    url: `photos/${id}.jpg`,
-    description: getRandomArrayElement(DESCRIPTIONS),
-    likes: getRandomInteger(15, 200),
-    comments: comments
-  };
-}
+const createPhoto = (id, comments) => ({
+  id: id,
+  url: `photos/${id}.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomInteger(15, 200),
+  comments: generateComments(),
+});
 
-function createPhotoArray() {
-  const photos = [];
-  for (let i = 1; i <= 25; i++) {
-    photos.push(createPhoto(i));
-  }
-  return photos;
-}
+const createPhotoArray = () => Array.from ({length: 25 }, (_, i) => createPhoto(i + 1));
 
 // Создание массива
 const photoDescriptions = createPhotoArray();
