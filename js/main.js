@@ -65,7 +65,9 @@ const createPhoto = (id, comments) => ({
   comments: generateComments(),
 });
 
-const createPhotoArray = () => Array.from ({length: 25 }, (_, i) => createPhoto(i + 1));
+const PHOTO_COUNT = 25;
+
+const createPhotoArray = () => Array.from({length: PHOTO_COUNT }, (_, i) => createPhoto(i + 1));
 
 // Создание массива
 const photoDescriptions = createPhotoArray();
