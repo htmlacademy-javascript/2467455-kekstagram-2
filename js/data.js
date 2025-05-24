@@ -46,7 +46,7 @@ const createComment = () => ({
   name: getRandomArrayElement(NAMES)
 });
 
-const generateComments = () => {
+const generateComment = () => {
   const commentsCount = getRandomInteger(0, 30);
   return Array.from({ length: commentsCount }, () => createComment());
 };
@@ -59,7 +59,7 @@ const createPhoto = (id) => ({
   url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomInteger (LIKES_COUNT_NUM1, LIKES_COUNT_NUM2),
-  comments: generateComments(),
+  comments: generateComment(),
 });
 
 const PHOTO_COUNT = 25;
