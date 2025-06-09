@@ -1,8 +1,8 @@
 import './util.js';
-import './template.js';
+import './render.js';
 import {photoDescriptions} from './data.js';
-import {renderThumbnails} from './template.js';
+import {renderThumbnails} from './render.js';
 console.log(
   photoDescriptions
 );
-console.log (renderThumbnails);
+renderThumbnails(photoDescriptions);
