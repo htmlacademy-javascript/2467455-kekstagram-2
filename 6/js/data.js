@@ -64,9 +64,6 @@ const createPhoto = (id) => ({
 
 const PHOTO_COUNT = 25;
 
-const createPhotoArray = () => Array.from({length: PHOTO_COUNT}, (_, i) => createPhoto(i + 1));
-
-// Создание массива
-const photoDescriptions = createPhotoArray();
-export {photoDescriptions};
+const getPhotoDescriptions = () => Array.from({length: PHOTO_COUNT}, (_, i) => createPhoto(i + 1));
+export {getPhotoDescriptions};
 
