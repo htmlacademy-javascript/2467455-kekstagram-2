@@ -1,4 +1,4 @@
-import {photoDescriptions} from './data.js';
+import {getPhotoDescriptions} from './data.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
@@ -25,6 +25,5 @@ const renderThumbnails = (photoArray) => {
   picturesContainer.appendChild(fragment);
 };
 
-renderThumbnails(photoDescriptions);
 export {renderThumbnails};
 
