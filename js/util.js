@@ -3,5 +3,9 @@ const getRandomInteger = (min, max) => Math.floor(Math.random() * (max - min + 1
 
 const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
-export {getRandomArrayElement};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const isEnterKey = (evt) => evt.key === 'Enter';
+
+export {getRandomArrayElement, isEscapeKey, isEnterKey};
 export {getRandomInteger};
