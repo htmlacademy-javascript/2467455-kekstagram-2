@@ -1,4 +1,4 @@
-import {getPhotoDescriptions} from './data.js';
+import {openUserModal} from './modal.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
@@ -10,6 +10,11 @@ const createThumbnail = (photo) => {
   pictureElement.querySelector('.picture__img').alt = photo.description;
   pictureElement.querySelector('.picture__likes').textContent = photo.likes;
   pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
+
+  pictureElement.addEventListener('click', () => {
+    openUserModal(photo);
+  });
+
   return pictureElement;
 };
 
@@ -25,5 +30,8 @@ const renderThumbnails = (photoArray) => {
   picturesContainer.appendChild(fragment);
 };
 
-export {renderThumbnails};
+const clearThumbnails = () => {
+  picturesContainer.innerHTML = '';
+};
+export {renderThumbnails, clearThumbnails};
 
