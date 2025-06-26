@@ -7,16 +7,19 @@ const createThumbnail = (photo) => {
   const img = pictureElement.querySelector('.picture__img');
   img.src = photo.url;
   img.alt = photo.description;
+
   pictureElement.querySelector('.picture__likes').textContent = photo.likes;
   pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
   pictureElement.dataset.photoId = photo.id;
+
   return pictureElement;
 };
 
-// Отрисовка всех миниатюр
+// Отрисовка миниатюр
 const renderThumbnails = (photoArray) => {
-  const fragment = document.createDocumentFragment();
+  picturesContainer.querySelectorAll('.picture').forEach((el) => el.remove());
 
+  const fragment = document.createDocumentFragment();
   photoArray.forEach((photo) => {
     const thumbnail = createThumbnail(photo);
     fragment.appendChild(thumbnail);
@@ -25,7 +28,7 @@ const renderThumbnails = (photoArray) => {
   picturesContainer.appendChild(fragment);
 };
 
-// Делегирование события клика по контейнеру
+// Назначение обработчика на клики по миниатюрам
 const setThumbnailClickHandler = (callback) => {
   picturesContainer.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('.picture');
@@ -40,9 +43,4 @@ const setThumbnailClickHandler = (callback) => {
   });
 };
 
-const clearThumbnails = () => {
-  picturesContainer.innerHTML = '';
-};
-
-export { renderThumbnails, clearThumbnails, setThumbnailClickHandler };
-
+export { renderThumbnails, setThumbnailClickHandler };

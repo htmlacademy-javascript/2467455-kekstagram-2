@@ -5,20 +5,22 @@ import { getPhotoDescriptions } from './data.js';
 import { renderThumbnails, setThumbnailClickHandler } from './render.js';
 import { openUserModal, initModalListeners } from './modal.js';
 import { initFormListeners } from './form.js';
+import './effects.js'; // 👈 ВАЖНО
 
-const photoDescriptions = getPhotoDescriptions();
-renderThumbnails(photoDescriptions);
+const init = () => {
+  const photoDescriptions = getPhotoDescriptions();
 
-// При клике по миниатюре — открываем модалку
-setThumbnailClickHandler((photoId) => {
-  const photo = photoDescriptions.find((item) => item.id === photoId);
-  if (photo) {
-    openUserModal(photo);
-  }
-});
+  renderThumbnails(photoDescriptions);
 
-// Инициализируем слушатели закрытия модального окна
-initModalListeners();
+  setThumbnailClickHandler((photoId) => {
+    const photo = photoDescriptions.find((item) => item.id === photoId);
+    if (photo) {
+      openUserModal(photo);
+    }
+  });
 
-// Инициализируем обработчики формы
-initFormListeners();
+  initModalListeners();
+  initFormListeners();
+};
+
+init();
