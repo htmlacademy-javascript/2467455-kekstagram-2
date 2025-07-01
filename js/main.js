@@ -5,7 +5,7 @@ import { getPhotoDescriptions } from './data.js';
 import { renderThumbnails, setThumbnailClickHandler } from './render.js';
 import { openUserModal, initModalListeners } from './modal.js';
 import { initFormListeners } from './form.js';
-import './effects.js'; // 👈 ВАЖНО
+import './effects.js';
 
 const init = () => {
   const photoDescriptions = getPhotoDescriptions();
@@ -24,3 +24,4 @@ const init = () => {
 };
 
 init();
+
