@@ -14,7 +14,7 @@ const effectsList = document.querySelector('.effects__list');
 
 let currentScale = DEFAULT_SCALE;
 let currentEffect = DEFAULT_EFFECT;
-let effectSliderInitialized = false;
+let isEffectSliderInitialized = false;
 
 const effectSettings = {
   none: {
@@ -75,30 +75,6 @@ const changeScale = (direction) => {
   }
   setScale(currentScale);
 };
-
-const initEffectSlider = () => {
-  if (effectSliderInitialized || !effectSlider) {
-    return;
-  }
-
-  noUiSlider.create(effectSlider, {
-    range: effectSettings.none.range,
-    start: effectSettings.none.start,
-    step: effectSettings.none.step,
-    connect: 'lower'
-  });
-
-  effectSlider.noUiSlider.on('update', (values) => {
-    const value = values[0];
-    const settings = effectSettings[currentEffect];
-    imagePreview.style.filter = settings.filter(value);
-    effectLevelInput.value = value;
-  });
-
-  effectSliderInitialized = true;
-  updateEffect(DEFAULT_EFFECT);
-};
-
 const updateEffect = (effectName) => {
   currentEffect = effectName;
   const settings = effectSettings[effectName];
@@ -124,14 +100,34 @@ const updateEffect = (effectName) => {
   effectLevelInput.value = settings.start;
 };
 
+const initEffectSlider = () => {
+  if (isEffectSliderInitialized || !effectSlider) {
+    return;
+  }
+
+  noUiSlider.create(effectSlider, {
+    range: effectSettings.none.range,
+    start: effectSettings.none.start,
+    step: effectSettings.none.step,
+    connect: 'lower'
+  });
+
+  effectSlider.noUiSlider.on('update', (values) => {
+    const value = values[0];
+    const settings = effectSettings[currentEffect];
+    imagePreview.style.filter = settings.filter(value);
+    effectLevelInput.value = value;
+  });
+
+  isEffectSliderInitialized = true;
+  updateEffect(DEFAULT_EFFECT);
+};
+
 effectsList.addEventListener('change', (evt) => {
   if (evt.target.name === 'effect') {
     updateEffect(evt.target.value);
   }
 });
-
-scaleSmallerButton.addEventListener('click', () => changeScale('smaller'));
-scaleBiggerButton.addEventListener('click', () => changeScale('bigger'));
 
 const resetEffects = () => {
   currentScale = DEFAULT_SCALE;
@@ -139,4 +135,11 @@ const resetEffects = () => {
   updateEffect(DEFAULT_EFFECT);
 };
 
-export { initEffectSlider, resetEffects };
+scaleSmallerButton.addEventListener('click', () => changeScale('smaller'));
+scaleBiggerButton.addEventListener('click', () => changeScale('bigger'));
+
+const initEffects = () => {
+  initEffectSlider();
+};
+
+export { initEffects, resetEffects };
