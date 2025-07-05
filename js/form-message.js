@@ -1,46 +1,45 @@
+import { isEscapeKey } from './util.js';
+
 const successTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
-let currentMessage = null;
+const body = document.body;
 
-const removeMessage = () => {
-  if (currentMessage) {
-    currentMessage.remove();
-    document.removeEventListener('keydown', onDocumentKeydown);
-    document.removeEventListener('click', onDocumentClick);
-    currentMessage = null;
+const showMessage = (template) => {
+  const messageElement = template.cloneNode(true);
+  body.appendChild(messageElement);
+
+  const removeMessage = () => {
+    messageElement.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOutsideClick);
+  };
+
+  function onEscKeydown(evt) {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      removeMessage();
+    }
   }
+
+  function onOutsideClick(evt) {
+    if (!evt.target.closest('section')) {
+      removeMessage();
+    }
+  }
+
+  const button = messageElement.querySelector('button');
+  button.addEventListener('click', removeMessage);
+  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('click', onOutsideClick);
 };
 
-function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    removeMessage();
-  }
-}
-
-function onDocumentClick(evt) {
-  if (!evt.target.closest('.success__inner') && !evt.target.closest('.error__inner')) {
-    removeMessage();
-  }
-}
-
 const showSuccessMessage = () => {
-  currentMessage = successTemplate.cloneNode(true);
-  document.body.append(currentMessage);
-
-  currentMessage.querySelector('.success__button').addEventListener('click', removeMessage);
-  document.addEventListener('keydown', onDocumentKeydown);
-  document.addEventListener('click', onDocumentClick);
+  showMessage(successTemplate);
 };
 
 const showErrorMessage = () => {
-  currentMessage = errorTemplate.cloneNode(true);
-  document.body.append(currentMessage);
-
-  currentMessage.querySelector('.error__button').addEventListener('click', removeMessage);
-  document.addEventListener('keydown', onDocumentKeydown);
-  document.addEventListener('click', onDocumentClick);
+  showMessage(errorTemplate);
 };
 
 export { showSuccessMessage, showErrorMessage };
