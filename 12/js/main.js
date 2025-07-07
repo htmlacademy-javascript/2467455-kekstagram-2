@@ -1,0 +1,34 @@
+import { getPhotos } from './api.js';
+import { renderThumbnails, setThumbnailClickHandler } from './render.js';
+import { initFilters } from './filter.js';
+import { initModalListeners } from './modal.js';
+import { initFormListeners } from './form.js';
+import { initEffects } from './effects.js';
+
+const filtersContainer = document.querySelector('.img-filters');
+
+const init = async () => {
+  try {
+    const photos = await getPhotos();
+
+    renderThumbnails(photos);
+    initFilters(photos);
+
+    filtersContainer.classList.remove('img-filters--inactive');
+  } catch (err) {
+    const errorTemplate = document.querySelector('#data-error').content.cloneNode(true);
+    document.body.appendChild(errorTemplate);
+    setTimeout(() => {
+      const el = document.querySelector('.data-error');
+      if (el) {
+        el.remove();
+      }
+    }, 5000);
+  }
+
+  initModalListeners();
+  initFormListeners();
+  initEffects();
+};
+
+init();
