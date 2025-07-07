@@ -1,36 +1,27 @@
-import './util.js';
-import './form-message.js';
-import './form.js';
-import './effects.js';
-import { initEffects } from './effects.js';
-import { renderThumbnails, setThumbnailClickHandler } from './render.js';
-import { openUserModal, initModalListeners } from './modal.js';
-import { initFormListeners } from './form.js';
 import { getPhotos } from './api.js';
+import { renderThumbnails, setThumbnailClickHandler } from './render.js';
+import { initFilters } from './filter.js';
+import { initModalListeners } from './modal.js';
+import { initFormListeners } from './form.js';
+import { initEffects } from './effects.js';
+
+const filtersContainer = document.querySelector('.img-filters');
 
 const init = async () => {
   try {
-    const photoDescriptions = await getPhotos();
+    const photos = await getPhotos();
 
-    renderThumbnails(photoDescriptions);
+    renderThumbnails(photos);
+    initFilters(photos);
 
-    setThumbnailClickHandler((photoId) => {
-      const photo = photoDescriptions.find((item) => item.id === photoId);
-      if (photo) {
-        openUserModal(photo);
-      }
-    });
-
-    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    filtersContainer.classList.remove('img-filters--inactive');
   } catch (err) {
-    const template = document.querySelector('#data-error');
-    const errorElement = template.content.cloneNode(true);
-    document.body.appendChild(errorElement);
-
+    const errorTemplate = document.querySelector('#data-error').content.cloneNode(true);
+    document.body.appendChild(errorTemplate);
     setTimeout(() => {
-      const element = document.querySelector('.data-error');
-      if (element) {
-        element.remove();
+      const el = document.querySelector('.data-error');
+      if (el) {
+        el.remove();
       }
     }, 5000);
   }
@@ -41,4 +32,3 @@ const init = async () => {
 };
 
 init();
-
