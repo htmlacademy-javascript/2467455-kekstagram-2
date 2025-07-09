@@ -10,6 +10,12 @@ const form = document.querySelector('.img-upload__form');
 const body = document.body;
 const submitButton = form.querySelector('.img-upload__submit');
 
+// [new] Элемент превью для изображения
+const imagePreview = document.querySelector('.img-upload__preview img');
+
+// [new] Поддерживаемые форматы
+const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--error',
@@ -20,17 +26,15 @@ const pristine = new Pristine(form, {
 });
 
 const hashtagInput = form.querySelector('.text__hashtags');
-
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
 
 const validateHashtags = (value) => {
   if (!value.trim()) {
-    return true; // Поле пустое — валидно
+    return true;
   }
 
   const hashtags = value.trim().split(/\s+/);
-
   if (hashtags.length > MAX_HASHTAGS) {
     return false;
   }
@@ -63,13 +67,8 @@ const getHashtagErrorMessage = (value) => {
   return '';
 };
 
-pristine.addValidator(
-  hashtagInput,
-  validateHashtags,
-  getHashtagErrorMessage
-);
+pristine.addValidator(hashtagInput, validateHashtags, getHashtagErrorMessage);
 
-// Показать форму
 const showUploadForm = () => {
   formOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
@@ -77,7 +76,6 @@ const showUploadForm = () => {
   initEffects();
 };
 
-// Скрыть форму и сбросить всё
 const hideUploadForm = () => {
   formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -87,7 +85,24 @@ const hideUploadForm = () => {
   pristine.reset();
 };
 
-// Обработка ESC
+// [new] Загрузка изображения в превью
+const loadImagePreview = () => {
+  const file = fileInput.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
+
+  if (matches) {
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => {
+      imagePreview.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+  }
+};
+
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     const activeElement = document.activeElement;
@@ -102,7 +117,6 @@ function onDocumentKeydown(evt) {
   }
 }
 
-// Отправка формы на сервер
 const sendData = async (formData) => {
   try {
     submitButton.disabled = true;
@@ -116,10 +130,10 @@ const sendData = async (formData) => {
   }
 };
 
-// Подключение слушателей
 const initFormListeners = () => {
   fileInput.addEventListener('change', () => {
-    showUploadForm();
+    loadImagePreview(); // показать выбранное изображение
+    showUploadForm(); // показать форму поверх
   });
 
   cancelButton.addEventListener('click', () => {
@@ -128,7 +142,6 @@ const initFormListeners = () => {
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-
     if (pristine.validate()) {
       const formData = new FormData(form);
       sendData(formData);
