@@ -132,8 +132,8 @@ const sendData = async (formData) => {
 
 const initFormListeners = () => {
   fileInput.addEventListener('change', () => {
-    loadImagePreview(); // показать выбранное изображение
-    showUploadForm(); // показать форму поверх
+    loadImagePreview();
+    showUploadForm();
   });
 
   cancelButton.addEventListener('click', () => {
