@@ -1,4 +1,3 @@
-// filter.js
 import { renderThumbnails } from './render.js';
 import { debounce } from './util.js';
 
