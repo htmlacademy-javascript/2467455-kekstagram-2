@@ -96,7 +96,14 @@ const loadImagePreview = () => {
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
-      imagePreview.src = reader.result;
+      const imageUrl = reader.result;
+      imagePreview.src = imageUrl;
+
+      // 👇 добавим обновление эффектов-превью
+      const effectsPreviews = document.querySelectorAll('.effects__preview');
+      effectsPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${imageUrl})`;
+      });
     });
 
     reader.readAsDataURL(file);
