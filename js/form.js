@@ -99,11 +99,13 @@ const loadImagePreview = () => {
       const imageUrl = reader.result;
       imagePreview.src = imageUrl;
 
-      // 👇 добавим обновление эффектов-превью
       const effectsPreviews = document.querySelectorAll('.effects__preview');
       effectsPreviews.forEach((preview) => {
         preview.style.backgroundImage = `url(${imageUrl})`;
       });
+
+      // Показываем форму только после загрузки изображения
+      showUploadForm();
     });
 
     reader.readAsDataURL(file);
@@ -152,14 +154,9 @@ const sendData = async (formData) => {
 };
 
 const initFormListeners = () => {
-  fileInput.addEventListener('change', () => {
-    loadImagePreview();
-    showUploadForm();
-  });
+  fileInput.addEventListener('change', loadImagePreview);
 
-  cancelButton.addEventListener('click', () => {
-    hideUploadForm();
-  });
+  cancelButton.addEventListener('click', hideUploadForm);
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();

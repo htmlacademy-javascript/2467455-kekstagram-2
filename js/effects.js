@@ -75,6 +75,7 @@ const changeScale = (direction) => {
   }
   setScale(currentScale);
 };
+
 const updateEffect = (effectName) => {
   currentEffect = effectName;
   const settings = effectSettings[effectName];
