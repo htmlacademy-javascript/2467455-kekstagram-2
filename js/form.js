@@ -2,6 +2,7 @@ import { isEscapeKey } from './util.js';
 import { initEffects, resetEffects } from './effects.js';
 import { showSuccessMessage, showErrorMessage } from './form-message.js';
 import { sendPhoto } from './api.js';
+import { renderThumbnails } from './render.js';
 
 const fileInput = document.querySelector('#upload-file');
 const formOverlay = document.querySelector('.img-upload__overlay');
@@ -9,11 +10,8 @@ const cancelButton = document.querySelector('.img-upload__cancel');
 const form = document.querySelector('.img-upload__form');
 const body = document.body;
 const submitButton = form.querySelector('.img-upload__submit');
-
-// [new] Элемент превью для изображения
 const imagePreview = document.querySelector('.img-upload__preview img');
 
-// [new] Поддерживаемые форматы
 const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
 const pristine = new Pristine(form, {
@@ -28,6 +26,9 @@ const pristine = new Pristine(form, {
 const hashtagInput = form.querySelector('.text__hashtags');
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
+
+let loadedPhotos = [];
+const addedPhotos = [];
 
 const validateHashtags = (value) => {
   if (!value.trim()) {
@@ -85,7 +86,6 @@ const hideUploadForm = () => {
   pristine.reset();
 };
 
-// [new] Загрузка изображения в превью
 const loadImagePreview = () => {
   const file = fileInput.files[0];
   const fileName = file.name.toLowerCase();
@@ -96,7 +96,16 @@ const loadImagePreview = () => {
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
-      imagePreview.src = reader.result;
+      const imageUrl = reader.result;
+      imagePreview.src = imageUrl;
+
+      const effectsPreviews = document.querySelectorAll('.effects__preview');
+      effectsPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${imageUrl})`;
+      });
+
+      // Показываем форму только после загрузки изображения
+      showUploadForm();
     });
 
     reader.readAsDataURL(file);
@@ -121,6 +130,20 @@ const sendData = async (formData) => {
   try {
     submitButton.disabled = true;
     await sendPhoto(formData);
+    const file = fileInput.files[0];
+    const localImageUrl = URL.createObjectURL(file);
+
+    const newPhoto = {
+      id: Date.now(),
+      url: localImageUrl,
+      description: form.querySelector('.text__description').value || 'Загруженное фото',
+      likes: 0,
+      comments: [],
+    };
+
+    addedPhotos.unshift(newPhoto);
+    renderThumbnails([...addedPhotos, ...loadedPhotos]);
+
     hideUploadForm();
     showSuccessMessage();
   } catch (err) {
@@ -131,14 +154,9 @@ const sendData = async (formData) => {
 };
 
 const initFormListeners = () => {
-  fileInput.addEventListener('change', () => {
-    loadImagePreview();
-    showUploadForm();
-  });
+  fileInput.addEventListener('change', loadImagePreview);
 
-  cancelButton.addEventListener('click', () => {
-    hideUploadForm();
-  });
+  cancelButton.addEventListener('click', hideUploadForm);
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -149,4 +167,8 @@ const initFormListeners = () => {
   });
 };
 
-export { initFormListeners };
+const setLoadedPhotos = (photos) => {
+  loadedPhotos = photos.slice();
+};
+
+export { initFormListeners, setLoadedPhotos };

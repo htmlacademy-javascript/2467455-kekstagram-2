@@ -1,14 +1,14 @@
-// main.js
 import { getPhotos } from './api.js';
 import { renderThumbnails } from './render.js';
 import { initFilters } from './filter.js';
 import { initModalListeners } from './modal.js';
-import { initFormListeners } from './form.js';
+import { initFormListeners, setLoadedPhotos } from './form.js';
 import { initEffects } from './effects.js';
 
 const init = async () => {
   try {
     const photos = await getPhotos();
+    setLoadedPhotos(photos);
 
     renderThumbnails(photos);
     initFilters(photos);
@@ -27,5 +27,6 @@ const init = async () => {
   initFormListeners();
   initEffects();
 };
+
 
 init();
