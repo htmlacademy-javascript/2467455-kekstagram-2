@@ -15,6 +15,10 @@ function debounce(callback, delay = 500) {
   };
 }
 
-export {getRandomArrayElement, isEscapeKey, isEnterKey};
-export {getRandomInteger};
-export { debounce };
+export {
+  getRandomArrayElement,
+  getRandomInteger,
+  isEscapeKey,
+  isEnterKey,
+  debounce
+};

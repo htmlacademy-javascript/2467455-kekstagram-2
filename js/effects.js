@@ -124,23 +124,24 @@ const initEffectSlider = () => {
   updateEffect(DEFAULT_EFFECT);
 };
 
-effectsList.addEventListener('change', (evt) => {
-  if (evt.target.name === 'effect') {
-    updateEffect(evt.target.value);
-  }
-});
-
 const resetEffects = () => {
   currentScale = DEFAULT_SCALE;
   setScale(DEFAULT_SCALE);
   updateEffect(DEFAULT_EFFECT);
 };
 
-scaleSmallerButton.addEventListener('click', () => changeScale('smaller'));
-scaleBiggerButton.addEventListener('click', () => changeScale('bigger'));
+effectsList.addEventListener('change', (evt) => {
+  if (evt.target.name === 'effect') {
+    updateEffect(evt.target.value);
+  }
+});
 
 const initEffects = () => {
   initEffectSlider();
 };
+
+scaleSmallerButton.addEventListener('click', () => changeScale('smaller'));
+scaleBiggerButton.addEventListener('click', () => changeScale('bigger'));
+
 
 export { initEffects, resetEffects };

@@ -16,18 +16,15 @@ const getRandomPhotos = (arr) => {
 const getDiscussedPhotos = (arr) =>
   arr.slice().sort((a, b) => b.comments.length - a.comments.length);
 
+const filterStrategies = {
+  'filter-random': getRandomPhotos,
+  'filter-discussed': getDiscussedPhotos,
+  'filter-default': (data) => data.slice(), // глубокая копия
+};
+
 const applyFilter = (filterId) => {
-  let filtered = [];
-  switch (filterId) {
-    case 'filter-random':
-      filtered = getRandomPhotos(photosData);
-      break;
-    case 'filter-discussed':
-      filtered = getDiscussedPhotos(photosData);
-      break;
-    default:
-      filtered = photosData.slice();
-  }
+  const filterFn = filterStrategies[filterId] || filterStrategies['filter-default'];
+  const filtered = filterFn(photosData);
 
   renderThumbnails(filtered);
 };
