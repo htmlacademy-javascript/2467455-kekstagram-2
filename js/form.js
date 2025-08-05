@@ -104,7 +104,6 @@ const loadImagePreview = () => {
         preview.style.backgroundImage = `url(${imageUrl})`;
       });
 
-      // Показываем форму только после загрузки изображения
       showUploadForm();
     });
 

@@ -1,5 +1,7 @@
-const GET_URL = 'https://31.javascript.htmlacademy.pro/kekstagram/data';
-const POST_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
+const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
+
+const GET_URL = `${BASE_URL}/data`;
+const POST_URL = BASE_URL;
 
 const getPhotos = async () => {
   const response = await fetch(GET_URL);

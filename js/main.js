@@ -1,7 +1,7 @@
 import { getPhotos } from './api.js';
-import { renderThumbnails } from './render.js';
+import { setThumbnailClickHandler, renderThumbnails } from './render.js';
 import { initFilters } from './filter.js';
-import { initModalListeners } from './modal.js';
+import { openUserModal, initModalListeners } from './modal.js';
 import { initFormListeners, setLoadedPhotos } from './form.js';
 import { initEffects } from './effects.js';
 
@@ -11,6 +11,14 @@ const init = async () => {
     setLoadedPhotos(photos);
 
     renderThumbnails(photos);
+
+    setThumbnailClickHandler((photoId) => {
+      const photo = photos.find((item) => item.id === photoId);
+      if (photo) {
+        openUserModal(photo);
+      }
+    });
+
     initFilters(photos);
   } catch (err) {
     const errorTemplate = document.querySelector('#data-error').content.cloneNode(true);
