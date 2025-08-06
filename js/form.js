@@ -4,6 +4,8 @@ import { showSuccessMessage, showErrorMessage } from './form-message.js';
 import { sendPhoto } from './api.js';
 import { renderThumbnails } from './render.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
 const fileInput = document.querySelector('#upload-file');
 const formOverlay = document.querySelector('.img-upload__overlay');
 const cancelButton = document.querySelector('.img-upload__cancel');
@@ -11,8 +13,6 @@ const form = document.querySelector('.img-upload__form');
 const body = document.body;
 const submitButton = form.querySelector('.img-upload__submit');
 const imagePreview = document.querySelector('.img-upload__preview img');
-
-const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -77,7 +77,7 @@ const showUploadForm = () => {
   initEffects();
 };
 
-const hideUploadForm = () => {
+const onUploadFormClose = () => {
   formOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -86,7 +86,7 @@ const hideUploadForm = () => {
   pristine.reset();
 };
 
-const loadImagePreview = () => {
+const onImageInputChange = () => {
   const file = fileInput.files[0];
   const fileName = file.name.toLowerCase();
 
@@ -113,14 +113,15 @@ const loadImagePreview = () => {
 
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
+    const isMessageOpen = Boolean(document.querySelector('.error, .success'));
     const activeElement = document.activeElement;
     const isInputFocused =
       activeElement === form.querySelector('.text__hashtags') ||
       activeElement === form.querySelector('.text__description');
 
-    if (!isInputFocused) {
+    if (!isInputFocused && !isMessageOpen) {
       evt.preventDefault();
-      hideUploadForm();
+      onUploadFormClose();
     }
   }
 }
@@ -143,7 +144,7 @@ const sendData = async (formData) => {
     addedPhotos.unshift(newPhoto);
     renderThumbnails([...addedPhotos, ...loadedPhotos]);
 
-    hideUploadForm();
+    onUploadFormClose();
     showSuccessMessage();
   } catch (err) {
     showErrorMessage();
@@ -153,9 +154,9 @@ const sendData = async (formData) => {
 };
 
 const initFormListeners = () => {
-  fileInput.addEventListener('change', loadImagePreview);
+  fileInput.addEventListener('change', onImageInputChange);
 
-  cancelButton.addEventListener('click', hideUploadForm);
+  cancelButton.addEventListener('click', onUploadFormClose);
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();

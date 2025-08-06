@@ -16,11 +16,11 @@ const createThumbnail = (photo) => {
 };
 
 // Отрисовка миниатюр
-const renderThumbnails = (photoArray) => {
+const renderThumbnails = (photos) => {
   picturesContainer.querySelectorAll('.picture').forEach((el) => el.remove());
 
   const fragment = document.createDocumentFragment();
-  photoArray.forEach((photo) => {
+  photos.forEach((photo) => {
     const thumbnail = createThumbnail(photo);
     fragment.appendChild(thumbnail);
   });

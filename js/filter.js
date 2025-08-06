@@ -8,13 +8,13 @@ const filterButtons = Array.from(filterForm.querySelectorAll('.img-filters__butt
 
 let photosData = [];
 
-const getRandomPhotos = (arr) => {
-  const shuffled = arr.slice().sort(() => Math.random() - 0.5);
+const getRandomPhotos = (photos) => {
+  const shuffled = photos.slice().sort(() => Math.random() - 0.5);
   return shuffled.slice(0, RANDOM_IMAGES_COUNT);
 };
 
-const getDiscussedPhotos = (arr) =>
-  arr.slice().sort((a, b) => b.comments.length - a.comments.length);
+const getDiscussedPhotos = (photos) =>
+  photos.slice().sort((a, b) => b.comments.length - a.comments.length);
 
 const filterStrategies = {
   'filter-random': getRandomPhotos,

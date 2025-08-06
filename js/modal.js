@@ -1,5 +1,7 @@
 import { isEscapeKey, isEnterKey } from './util.js';
 
+const COMMENTS_STEP = 5;
+
 const userModalElement = document.querySelector('.big-picture');
 const bigPictureImg = userModalElement.querySelector('.big-picture__img img');
 const likesCount = userModalElement.querySelector('.likes-count');
@@ -12,7 +14,7 @@ const userModalElementClose = userModalElement.querySelector('.big-picture__canc
 
 let currentComments = [];
 let commentsToShow = 0;
-const COMMENTS_STEP = 5;
+
 
 // Создание комментария
 const createCommentElement = ({ avatar, name, message }) => {
@@ -65,7 +67,7 @@ const fillModal = (photo) => {
 };
 
 // Закрытие окна
-const closeUserModal = () => {
+const onUserModalClose = () => {
   userModalElement.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -75,7 +77,7 @@ const closeUserModal = () => {
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeUserModal();
+    onUserModalClose();
   }
 }
 
@@ -89,11 +91,11 @@ const openUserModal = (photo) => {
 
 // Инициализация слушателей
 const initModalListeners = () => {
-  userModalElementClose.addEventListener('click', closeUserModal);
+  userModalElementClose.addEventListener('click', onUserModalClose);
 
   userModalElementClose.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {
-      closeUserModal();
+      onUserModalClose();
     }
   });
 
