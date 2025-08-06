@@ -9,7 +9,7 @@ const showMessage = (template) => {
   const messageElement = template.cloneNode(true);
   body.appendChild(messageElement);
 
-  const removeMessage = () => {
+  const onMessageClick = () => {
     messageElement.remove();
     document.removeEventListener('keydown', onEscKeydown);
     document.removeEventListener('click', onOutsideClick);
@@ -18,18 +18,18 @@ const showMessage = (template) => {
   function onEscKeydown(evt) {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      removeMessage();
+      onMessageClick();
     }
   }
 
   function onOutsideClick(evt) {
     if (!evt.target.closest('section')) {
-      removeMessage();
+      onMessageClick();
     }
   }
 
   const button = messageElement.querySelector('button');
-  button.addEventListener('click', removeMessage);
+  button.addEventListener('click', onMessageClick);
   document.addEventListener('keydown', onEscKeydown);
   document.addEventListener('click', onOutsideClick);
 };
